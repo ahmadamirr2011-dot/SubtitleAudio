@@ -1,9 +1,10 @@
 name: Build Subtitle Audio for Windows
 
-on:
+"on":
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches:
+      - main
 
 permissions:
   contents: read
@@ -11,49 +12,26 @@ permissions:
 jobs:
   build:
     runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - run: npm install --no-audit --no-fund
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
 
-      - run: npm run dist
+      - name: Build EXE
+        run: npm run dist
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload EXE
+        uses: actions/upload-artifact@v4
         with:
           name: Subtitle-Audio-Windows-EXE
-          path: dist/*.exe
-          if-no-files-found: error
-          retention-days: 14name: Build Subtitle Audio for Windows
-
-on:
-  workflow_dispatch:
-  push:
-    branches: [main, master]
-
-permissions:
-  contents: read
-
-jobs:
-  build:
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-
-      - run: npm install --no-audit --no-fund
-
-      - run: npm run dist
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: Subtitle-Audio-Windows-EXE
-          path: dist/*.exe
+          path: "dist/*.exe"
           if-no-files-found: error
           retention-days: 14
